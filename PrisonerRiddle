@@ -1,0 +1,69 @@
+public class PrisonerRiddle {
+    
+    public Map<Integer, Integer> createRoom(Integer numberOfPrisoner){
+        
+        Map<Integer, Integer> roomMap = new Map<Integer, Integer>();
+        Integer randomSlip;
+        List<Integer> generatedSlip = new List<Integer>();
+        
+        Boolean generateSlip;
+        for(Integer index = 1; index <= numberOfPrisoner; index++){
+            generateSlip = TRUE;
+            while(generateSlip){
+                randomSlip = Integer.valueOf((Math.random() * numberOfPrisoner) + 1);
+                if(generatedSlip.contains(randomSlip)){
+                    continue;
+                }
+                roomMap.put(index, randomSlip);
+                generateSlip = FALSE;
+                generatedSlip.add(randomSlip);
+            }
+            
+        }
+        System.debug('Aj : roomMap = '+Json.serialize(roomMap));
+        return roomMap;
+    }
+    
+    public Integer runScenario(Integer numberOfPrisoner) {
+        Integer numberOfBoxOpened;
+        Integer numOfPrisonerFoundNumber = 0;
+        Integer slipInTheBox;
+        Map<Integer, Integer> roomMap = createRoom(numberOfPrisoner);
+        
+        for(Integer index = 1; index <= numberOfPrisoner; index++){
+            slipInTheBox = roomMap.get(index);
+            numberOfBoxOpened = 1;
+            
+            while(slipInTheBox != index){
+                if(numberOfBoxOpened < numberOfPrisoner/2){
+                    slipInTheBox = roomMap.get(slipInTheBox);
+                    numberOfBoxOpened++;
+                    continue;
+                }
+                break;
+            }
+            
+            if(slipInTheBox == index){
+                numOfPrisonerFoundNumber++;
+            }
+        }
+        System.debug('Aj : numOfPrisonerFoundNumber = '+numOfPrisonerFoundNumber);
+        return numOfPrisonerFoundNumber;
+    }
+    
+    public void determineProbability(Integer numberOfPrisoner){
+        Map<Integer, Integer> scenarioReport = new Map<Integer, Integer>();
+        Integer scenarioOutcome;
+        Integer probability = 0;
+        for(Integer index = 1; index <= 100; index++){
+            scenarioOutcome = runScenario(numberOfPrisoner);
+            scenarioReport.put(index, scenarioOutcome);
+            if(scenarioOutcome == numberOfPrisoner){
+                probability++;
+            }
+        }
+        System.debug('Aj : probability = '+probability);
+        System.debug('Aj : scenarioReport = '+Json.serialize(scenarioReport));
+        
+    }
+}
